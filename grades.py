@@ -49,7 +49,7 @@ def menu():
         #users choice
         choice =int(input("\nGradebook Menu:\n0: Add Student\n1: List Students\n2: Calculate Course Averages\n3: Calculate Student Averages\n4. Exit\nEnter your choice: "))
         #dictionary to make choices instead of 100 if statements
-        menus = dict({0:add_student, 1:list_students, 2:"course_average", 3:student_average})
+        menus = dict({0:add_student, 1:list_students, 2:course_average, 3:student_average, 4:delete_student})
         #if statement to exit
         if choice ==4:
             print("Goodbye") 
@@ -68,7 +68,11 @@ def student_average():
 def course_average():
     print("gay")    
     
-    
+def delete_student():
+    delete = input("Enter student Id you wish to delete: ")
+    delete_db(connection,"student_grades","id",{delete})
+    print("Student deleted successfully")
+
 def list_students():
     results= select_db(connection,"student_grades").fetchall()
     print(results)
