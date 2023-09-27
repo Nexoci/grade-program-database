@@ -47,36 +47,50 @@ def menu():
         #try:
         time.sleep(1)
         #users choice
-        choice =int(input("\nGradebook Menu:\n0: Add Student\n1: List Students\n2: Calculate Course Averages\n3: Calculate Student Averages\n4. Exit\nEnter your choice: "))
+        choice =int(input("\nGradebook Menu:\n0: Add Student\n1: List Students\n2: Calculate Course Averages\n3: Calculate Student Averages\n4. Delete Student\n5. Update Student Info\n6. Exit\nEnter your choice: "))
+        print("")
         #dictionary to make choices instead of 100 if statements
-        menus = dict({0:add_student, 1:list_students, 2:course_average, 3:student_average, 4:delete_student})
+        menus = dict({0:add_student, 1:list_students, 2:course_average, 3:student_average, 4:delete_student, 5:"update_info"})
         #if statement to exit
-        if choice ==4:
+        if choice ==6:
             print("Goodbye") 
             done = True
         elif choice in options:
             menus[choice]()
-        #except:
-            #print("That is not an Option try a number 0-3")
         time.sleep(1)
 def student_average():
     student_name = input("Enter the student's name: ")
     student_id = input("Enter student Id: ")
     result = select_db(connection,"student_grades",[f"name='{student_name}'",f"id ={student_id}"]).fetchall()
     for i in result:
-        print(f"{i[1]}'s average is {(i[2]+i[3]+i[4]+i[5])/4}")
+        print(f"{i[1]}'s average is {(i[2]+i[3]+i[4]+i[5])/4}%")
+        
 def course_average():
-    print("gay")    
+    result = select_db(connection, "student_grades").fetchall()
+    total_score = 0
+    for row in result:
+        total_score += sum(row[2:])
+    course_average = total_score / (len(result)*4)
+    print(f"The course average is: {course_average:.2f}%")
     
 def delete_student():
+    result = select_db(connection, "student_grades").fetchall()
     delete = input("Enter student Id you wish to delete: ")
     delete_db(connection,"student_grades","id",{delete})
-    print("Student deleted successfully")
-
+    if not result:
+        print("No students found.")
+        return
+    else:
+        print("Student deleted successfully")
 def list_students():
-    results= select_db(connection,"student_grades").fetchall()
-    print(results)
-    
+    results = select_db(connection, "student_grades").fetchall()
+    if not results:
+        print("No students found.")
+        return
+    for row in results:
+        student_id, name, english, physics, chemistry, math = row
+        print(f" ID: {student_id}\n Name: {name}\n English: {english}\n Physics: {physics}\n Chemistry: {chemistry}\n Math: {math}\n")
+     
 def add_student():
     name = input("Enter student name: ")
     English = float(input("Enter grade for English: "))
