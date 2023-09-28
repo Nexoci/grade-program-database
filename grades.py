@@ -63,25 +63,28 @@ def student_average():
     student_id = input("Enter student Id: ")
     result = select_db(connection,"student_grades",[f"name='{student_name}'",f"id ={student_id}"]).fetchall()
     for i in result:
-        print(f"{i[1]}'s average is {(i[2]+i[3]+i[4]+i[5])/4}%")
-        
+        print(f"{i[1]}'s average is {(i[2]+i[3]+i[4]+i[5])/4}%")        
 def course_average():
     result = select_db(connection, "student_grades").fetchall()
     total_score = 0
     for row in result:
         total_score += sum(row[2:])
+    print(len(result))
     course_average = total_score / (len(result)*4)
     print(f"The course average is: {course_average:.2f}%")
-    
 def delete_student():
     result = select_db(connection, "student_grades").fetchall()
     delete = input("Enter student Id you wish to delete: ")
-    delete_db(connection,"student_grades","id",{delete})
+    delete_db(connection,"student_grades","id",delete)
     if not result:
         print("No students found.")
         return
     else:
         print("Student deleted successfully")
+def update_database():
+    result = select_db(connection, "student_grades").fetchall()
+    update_db(connection,"test",["first='joe'"],"id=4")
+    
 def list_students():
     results = select_db(connection, "student_grades").fetchall()
     if not results:
@@ -90,7 +93,6 @@ def list_students():
     for row in results:
         student_id, name, english, physics, chemistry, math = row
         print(f" ID: {student_id}\n Name: {name}\n English: {english}\n Physics: {physics}\n Chemistry: {chemistry}\n Math: {math}\n")
-     
 def add_student():
     name = input("Enter student name: ")
     English = float(input("Enter grade for English: "))
