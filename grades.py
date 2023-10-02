@@ -47,10 +47,10 @@ def menu():
         #try:
         time.sleep(1)
         #users choice
-        choice =int(input("\nGradebook Menu:\n0: Add Student\n1: List Students\n2: Calculate Course Averages\n3: Calculate Student Averages\n4. Delete Student\n5. Update Student Info\n6. Exit\nEnter your choice: "))
+        choice =int(input("\nGradebook Menu:\n0: Add Student\n1: List Students\n2: Calculate Course Averages\n3: Calculate Student Averages\n4. Delete Student\n5. Exit\nEnter your choice: "))
         print("")
         #dictionary to make choices instead of 100 if statements
-        menus = dict({0:add_student, 1:list_students, 2:course_average, 3:student_average, 4:delete_student, 5:"update_info"})
+        menus = dict({0:add_student, 1:list_students, 2:course_average, 3:student_average, 4:delete_student, 5:update_db})
         #if statement to exit
         if choice ==6:
             print("Goodbye") 
@@ -69,29 +69,28 @@ def course_average():
     total_score = 0
     for row in result:
         total_score += sum(row[2:])
-    print(len(result))
     course_average = total_score / (len(result)*4)
     print(f"The course average is: {course_average:.2f}%")
 def delete_student():
     result = select_db(connection, "student_grades").fetchall()
     delete = input("Enter student Id you wish to delete: ")
-    delete_db(connection,"student_grades","id",delete)
-    if not result:
-        print("No students found.")
-        return
+    if delete not in result:
+        print("Student Unavailible")
     else:
-        print("Student deleted successfully")
-def update_database():
-    result = select_db(connection, "student_grades").fetchall()
-    update_db(connection,"test",["first='joe'"],"id=4")
-    
+        delete_db(connection,"student_grades","id",delete)
+        print("Student deleted successfully")   
+def update_():
+    studentid = input("Enter Student Id")
+    English = float(input("Enter new grade for English: "))
+    Physics = float(input("Enter new grade for Physics: "))
+    Chemistry = float(input("Enter new grade for Chemistry: "))
+    Math = float(input("Enter new grade for Math: "))
+    update_db(connection,"student_grades",[f"English='{English}'",f"Physics='{Physics}'",f"Chemistry='{Chemistry}'",f"Math='{Math}'"],f"id={studentid}")
 def list_students():
     results = select_db(connection, "student_grades").fetchall()
-    if not results:
-        print("No students found.")
-        return
     for row in results:
         student_id, name, english, physics, chemistry, math = row
+        time.sleep(0.5)
         print(f" ID: {student_id}\n Name: {name}\n English: {english}\n Physics: {physics}\n Chemistry: {chemistry}\n Math: {math}\n")
 def add_student():
     name = input("Enter student name: ")
@@ -99,6 +98,10 @@ def add_student():
     Physics = float(input("Enter grade for Physics: "))
     Chemistry = float(input("Enter grade for Chemistry: "))
     Math = float(input("Enter grade for Math: "))
+    if len(English) < 3 or len(Physics) < 3 or len(Chemistry) or len(Math) < 3 or name[1].isdigit():
+        print("Invalid Input")
+        
+        
     insert_db(connection,"student_grades",["name","English","Physics","Chemistry","Math"],[f'{name}',f'{English}',f'{Physics}',f'{Chemistry}',f'{Math}'])
     print("Student data added successfully.")
 menu()
