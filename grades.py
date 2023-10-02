@@ -85,7 +85,7 @@ def update_():
     Physics = float(input("Enter new grade for Physics: "))
     Chemistry = float(input("Enter new grade for Chemistry: "))
     Math = float(input("Enter new grade for Math: "))
-    update_db(connection,"student_grades",[f"English='{English}'",f"Physics='{Physics}'",f"Chemistry='{Chemistry}'",f"Math='{Math}'"],f"id={studentid}")
+    update_db(connection,"student_grades",[f"English={English}",f"Physics={Physics}",f"Chemistry={Chemistry}",f"Math={Math}"],f"id={studentid}")
 def list_students():
     results = select_db(connection, "student_grades").fetchall()
     for row in results:
@@ -94,14 +94,22 @@ def list_students():
         print(f" ID: {student_id}\n Name: {name}\n English: {english}\n Physics: {physics}\n Chemistry: {chemistry}\n Math: {math}\n")
 def add_student():
     name = input("Enter student name: ")
-    English = float(input("Enter grade for English: "))
-    Physics = float(input("Enter grade for Physics: "))
-    Chemistry = float(input("Enter grade for Chemistry: "))
-    Math = float(input("Enter grade for Math: "))
-    if len(English) < 3 or len(Physics) < 3 or len(Chemistry) or len(Math) < 3 or name[1].isdigit():
+    English = (input("Enter grade for English: "))
+    if len(English) >= 3:
         print("Invalid Input")
-        
-        
+        return  
+    Physics = (input("Enter grade for Physics: "))
+    if len(English) >= 3:
+        print("Invalid Input")
+        return  
+    Chemistry = (input("Enter grade for Chemistry: "))
+    if len(English) >= 3:
+        print("Invalid Input")
+        return  
+    Math = (input("Enter grade for Math: "))
+    if len(English) >= 3:
+        print("Invalid Input")
+        return  
     insert_db(connection,"student_grades",["name","English","Physics","Chemistry","Math"],[f'{name}',f'{English}',f'{Physics}',f'{Chemistry}',f'{Math}'])
     print("Student data added successfully.")
 menu()
